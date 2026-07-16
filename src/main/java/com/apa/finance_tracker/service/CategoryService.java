@@ -1,14 +1,13 @@
 package com.apa.finance_tracker.service;
-import com.apa.finance_tracker.dto.request.CategoryCreateRequest;
-import com.apa.finance_tracker.dto.request.CategoryUpdateRequest;
-import com.apa.finance_tracker.dto.response.CategoryResponse;
+import com.apa.finance_tracker.entity.Category;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CategoryService {
-    CategoryResponse createCategory(CategoryCreateRequest categoryCreateRequest);
-    CategoryResponse getCategoryById(Long categoryId);
-    CategoryResponse updateCategory(Long categoryId, CategoryUpdateRequest categoryUpdateRequest);
-    String deleteCategory(Long categoryId);
-    List<CategoryResponse> getAllCategory();
+    Category createCategory(Category category);
+    Category getCategoryById(Long categoryId);
+    List<Category> getAllCategory();
+    Category updateCategory(Long categoryId, Category category);
+    void deleteCategory(Long categoryId);
 }

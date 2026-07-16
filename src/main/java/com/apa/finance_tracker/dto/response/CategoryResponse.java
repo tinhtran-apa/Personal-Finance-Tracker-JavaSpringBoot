@@ -10,6 +10,16 @@ public class CategoryResponse {
     private CategoryType type;
     private LocalDateTime createdAt;
 
+    public CategoryResponse() {}
+
+    public CategoryResponse(Long id, String name, CategoryType type, LocalDateTime createdAt) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.createdAt = createdAt;
+    }
+
+
     public Long getId() {
         return id;
     }

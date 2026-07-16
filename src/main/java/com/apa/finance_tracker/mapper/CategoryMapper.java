@@ -6,6 +6,9 @@ import com.apa.finance_tracker.dto.response.CategoryResponse;
 import com.apa.finance_tracker.entity.Category;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class CategoryMapper {
     public Category toEntityCreate(CategoryCreateRequest request) {
@@ -15,10 +18,17 @@ public class CategoryMapper {
         return category;
     }
 
-    public Category toEntityUpdate(Category category, CategoryUpdateRequest request) {
+    public Category toEntityUpdate(CategoryUpdateRequest request) {
+        Category category = new Category();
         category.setName(request.getName());
         category.setType(request.getType());
         return category;
+    }
+
+
+    public void updateEntity(Category target, Category source) {
+        target.setName(source.getName());
+        target.setType(source.getType());
     }
 
     public CategoryResponse toResponse(Category category) {
@@ -31,4 +41,11 @@ public class CategoryMapper {
     }
 
 
+    public List<CategoryResponse> toResponseList(List<Category> category) {
+        List<CategoryResponse> responses = new ArrayList<>();
+        for (Category categories : category) {
+            responses.add(toResponse(categories));
+        }
+        return responses;
+    }
 }
