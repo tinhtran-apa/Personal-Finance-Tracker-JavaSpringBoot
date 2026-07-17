@@ -1,4 +1,4 @@
-package com.apa.finance_tracker.repositorys;
+package com.apa.finance_tracker.repositories;
 
 import com.apa.finance_tracker.entitys.Category;
 import org.springframework.data.jpa.repository.JpaRepository;

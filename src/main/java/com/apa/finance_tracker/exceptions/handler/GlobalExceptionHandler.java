@@ -2,7 +2,7 @@ package com.apa.finance_tracker.exceptions.handler;
 
 import com.apa.finance_tracker.constants.ErrorMessage;
 import com.apa.finance_tracker.constants.ValidationMessage;
-import com.apa.finance_tracker.dto.responses.ErrorResponse;
+import com.apa.finance_tracker.dtos.responses.ErrorResponse;
 import com.apa.finance_tracker.constants.ErrorCode;
 import com.apa.finance_tracker.exceptions.resource.BusinessException;
 import com.apa.finance_tracker.exceptions.resource.DuplicateResourceException;

@@ -1,4 +1,4 @@
-package com.apa.finance_tracker.repositorys;
+package com.apa.finance_tracker.repositories;
 
 import com.apa.finance_tracker.entitys.Transaction;
 import com.apa.finance_tracker.enums.TransactionType;

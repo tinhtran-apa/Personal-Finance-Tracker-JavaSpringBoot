@@ -5,9 +5,9 @@ import com.apa.finance_tracker.entitys.Category;
 import com.apa.finance_tracker.exceptions.resource.BusinessException;
 import com.apa.finance_tracker.exceptions.resource.DuplicateResourceException;
 import com.apa.finance_tracker.exceptions.resource.ResourceNotFoundException;
-import com.apa.finance_tracker.mappers.CategoryMapper;
-import com.apa.finance_tracker.repositorys.CategoryRepository;
-import com.apa.finance_tracker.repositorys.TransactionRepository;
+import com.apa.finance_tracker.mappers.category.CategoryMapperUpdate;
+import com.apa.finance_tracker.repositories.CategoryRepository;
+import com.apa.finance_tracker.repositories.TransactionRepository;
 import com.apa.finance_tracker.services.CategoryService;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +17,9 @@ import java.util.List;
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
-    private final CategoryMapper categoryMapper;
     private final TransactionRepository transactionRepository;
-    public CategoryServiceImpl(CategoryRepository categoryRepository, CategoryMapper categoryMapper, TransactionRepository transactionRepository) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository,  TransactionRepository transactionRepository) {
         this.categoryRepository = categoryRepository;
-        this.categoryMapper = categoryMapper;
         this.transactionRepository = transactionRepository;
     }
 
@@ -56,13 +54,16 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryRepository.existsByNameAndIdNot(category.getName(), categoryId)) {
             throw new DuplicateResourceException(ErrorMessage.CATEGORY_ALREADY_EXISTS);
         }
-        categoryMapper.updateEntity(existCategory, category);
+        new CategoryMapperUpdate().updateEntity(existCategory, category);
         return categoryRepository.save(existCategory);
     }
 
     @Override
     public void deleteCategory(Long categoryId) {
         getCategory(categoryId);
+        if(transactionRepository.existsByCategoryId(categoryId)) {
+            throw new BusinessException(ErrorMessage.CATEGORY_HAS_TRANSACTIONS);
+        }
         categoryRepository.deleteById(categoryId);
     }
 

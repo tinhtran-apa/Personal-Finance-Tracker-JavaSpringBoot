@@ -1,14 +1,14 @@
 package com.apa.finance_tracker.services.impl;
 
 import com.apa.finance_tracker.constants.ErrorMessage;
-import com.apa.finance_tracker.dto.responses.TransactionSummaryResponse;
+import com.apa.finance_tracker.dtos.responses.TransactionSummaryResponse;
 import com.apa.finance_tracker.entitys.Category;
 import com.apa.finance_tracker.entitys.Transaction;
 import com.apa.finance_tracker.enums.TransactionType;
 import com.apa.finance_tracker.exceptions.resource.BusinessException;
 import com.apa.finance_tracker.exceptions.resource.ResourceNotFoundException;
-import com.apa.finance_tracker.mappers.TransactionMapper;
-import com.apa.finance_tracker.repositorys.TransactionRepository;
+import com.apa.finance_tracker.mappers.transaction.TransactionMapperUpdate;
+import com.apa.finance_tracker.repositories.TransactionRepository;
 import com.apa.finance_tracker.services.CategoryService;
 import com.apa.finance_tracker.services.TransactionService;
 import org.springframework.data.domain.Page;
@@ -20,12 +20,10 @@ import java.math.BigDecimal;
 @Service
 public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
-    private final TransactionMapper transactionMapper;
     private final CategoryService categoryService;
 
-    public TransactionServiceImpl(TransactionRepository transactionRepository, TransactionMapper transactionMapper, CategoryService categoryService) {
+    public TransactionServiceImpl(TransactionRepository transactionRepository, CategoryService categoryService) {
         this.transactionRepository = transactionRepository;
-        this.transactionMapper = transactionMapper;
         this.categoryService = categoryService;
     }
     @Override
@@ -58,7 +56,7 @@ public class TransactionServiceImpl implements TransactionService {
             throw new BusinessException(ErrorMessage.TRANSACTION_TYPE_MISMATCH);
         }
 
-        transactionMapper.updateEntity(existTransaction, transaction);
+        new TransactionMapperUpdate().updateEntity(existTransaction, transaction);
         existTransaction.setCategory(category);
         return transactionRepository.save(existTransaction);
     }

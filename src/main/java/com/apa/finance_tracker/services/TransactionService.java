@@ -1,6 +1,6 @@
 package com.apa.finance_tracker.services;
 
-import com.apa.finance_tracker.dto.responses.TransactionSummaryResponse;
+import com.apa.finance_tracker.dtos.responses.TransactionSummaryResponse;
 import com.apa.finance_tracker.entitys.Transaction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
