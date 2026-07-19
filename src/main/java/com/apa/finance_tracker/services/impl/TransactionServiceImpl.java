@@ -11,11 +11,14 @@ import com.apa.finance_tracker.mappers.transaction.TransactionMapperUpdate;
 import com.apa.finance_tracker.repositories.TransactionRepository;
 import com.apa.finance_tracker.services.CategoryService;
 import com.apa.finance_tracker.services.TransactionService;
+import com.apa.finance_tracker.specifications.TransactionSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -42,8 +45,10 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Page<Transaction> getAllTransaction(Pageable pageable) {
-        return transactionRepository.findAll(pageable);
+    public Page<Transaction> getAllTransaction(TransactionType type, Long categoryId, LocalDate from, LocalDate to,Pageable pageable) {
+        System.out.println("type = " + type);
+        Specification<Transaction> specification = TransactionSpecification.filter(type, categoryId, from, to);
+        return transactionRepository.findAll(specification, pageable);
     }
 
     @Override
