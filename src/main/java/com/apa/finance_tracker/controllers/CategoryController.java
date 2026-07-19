@@ -10,6 +10,7 @@ import com.apa.finance_tracker.mappers.category.CategoryMapperCreate;
 import com.apa.finance_tracker.mappers.category.CategoryMapperResponse;
 import com.apa.finance_tracker.mappers.category.CategoryMapperUpdate;
 import com.apa.finance_tracker.services.CategoryService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
+    @Operation(summary = "Create a new category")
     public ResponseEntity<ApiResponse<CategoryResponse>> createCategory(@Valid @RequestBody CategoryCreateRequest request) {
         Category category = new CategoryMapperCreate().toEntityCreate(request);
         Category savedCategory = categoryService.createCategory(category);
@@ -33,6 +35,7 @@ public class CategoryController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all categories")
     public ResponseEntity<ApiResponse<List<CategoryResponse>>> getAllCategory() {
         List<Category> category = categoryService.getAllCategory();
         List<CategoryResponse> response = new CategoryMapperResponse().toResponseList(category);
@@ -40,6 +43,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{categoryId}")
+    @Operation(summary = "Get category by id")
     public ResponseEntity<ApiResponse<CategoryResponse>> getCategoryById(@PathVariable Long categoryId) {
         Category category = categoryService.getCategoryById(categoryId);
         CategoryResponse response = new CategoryMapperResponse().toResponse(category);
@@ -47,6 +51,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{categoryId}")
+    @Operation(summary = "Update a category")
     public ResponseEntity<ApiResponse<CategoryResponse>> updateCategory(@Valid @PathVariable Long categoryId, @RequestBody CategoryUpdateRequest request) {
         Category category = new CategoryMapperUpdate().toEntityUpdate(request);
         Category savedCategory = categoryService.updateCategory(categoryId, category);
@@ -55,6 +60,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{categoryId}")
+    @Operation(summary = "Delete a category")
     public ResponseEntity<ApiResponse<Void>> deleteCategory(@PathVariable Long categoryId){
         categoryService.deleteCategory(categoryId);
         return ResponseEntity.ok(ApiResponse.success(SuccessMessage.CATEGORY_DELETED));

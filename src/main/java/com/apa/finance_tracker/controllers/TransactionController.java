@@ -13,6 +13,7 @@ import com.apa.finance_tracker.mappers.transaction.TransactionMapperCreate;
 import com.apa.finance_tracker.mappers.transaction.TransactionMapperResponse;
 import com.apa.finance_tracker.mappers.transaction.TransactionMapperUpdate;
 import com.apa.finance_tracker.services.TransactionService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,6 +32,7 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @PostMapping
+    @Operation(summary = "Create a new transaction")
     public ResponseEntity<ApiResponse<TransactionResponse>> createTransaction(@Valid @RequestBody TransactionCreateRequest request) {
         Transaction transaction = new TransactionMapperCreate().toEntityCreate(request);
         Transaction savedTransaction = transactionService.createTransaction(transaction);
@@ -39,6 +41,7 @@ public class TransactionController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all transactions")
     public ResponseEntity<ApiResponse<PageResponse<TransactionResponse>>> getAllCategory(
             @RequestParam(required = false)
             TransactionType type,
@@ -58,6 +61,7 @@ public class TransactionController {
     }
 
     @GetMapping("/{transactionId}")
+    @Operation(summary = "Get transaction by id")
     public ResponseEntity<ApiResponse<TransactionResponse>> getCategoryById(@PathVariable Long transactionId) {
         Transaction transaction = transactionService.getTransactionById(transactionId);
         TransactionResponse response = new TransactionMapperResponse().toResponse(transaction);
@@ -65,6 +69,7 @@ public class TransactionController {
     }
 
     @PutMapping("/{transactionId}")
+    @Operation(summary = "Update a transaction")
     public ResponseEntity<ApiResponse<TransactionResponse>> updateCategory(@Valid @PathVariable Long transactionId, @RequestBody TransactionUpdateRequest request) {
         Transaction transaction = new TransactionMapperUpdate().toEntityUpdate(request);
         Transaction savedTransaction = transactionService.updateTransaction(transactionId, transaction);
@@ -73,12 +78,14 @@ public class TransactionController {
     }
 
     @DeleteMapping("/{transactionId}")
+    @Operation(summary = "Delete a transaction")
     public ResponseEntity<ApiResponse<Void>> deleteCategory(@PathVariable Long transactionId) {
         transactionService.deleteTransaction(transactionId);
         return ResponseEntity.ok(ApiResponse.success(SuccessMessage.TRANSACTION_DELETED));
     }
 
     @GetMapping("/summary")
+    @Operation(summary = "Get summary of transaction")
     public ResponseEntity<ApiResponse<TransactionSummaryResponse>> getSummary() {
         return ResponseEntity.ok(ApiResponse.success(SuccessMessage.TRANSACTION_SUMMARY, transactionService.getSummary()));
     }
