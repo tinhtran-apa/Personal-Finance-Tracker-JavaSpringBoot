@@ -5,13 +5,14 @@ import com.apa.finance_tracker.enums.TransactionType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class TransactionUpdateRequest {
     @NotNull(message = ValidationMessage.TRANSACTION_AMOUNT_REQUIRED)
     @Positive(message = ValidationMessage.TRANSACTION_AMOUNT_POSITIVE)
@@ -28,15 +29,4 @@ public class TransactionUpdateRequest {
 
     @NotNull(message = ValidationMessage.CATEGORY_REQUIRED)
     private Long categoryId;
-
-    public TransactionUpdateRequest() {
-    }
-
-    public TransactionUpdateRequest(BigDecimal amount, String description,TransactionType type, LocalDate transactionDate, Long category) {
-        this.amount = amount;
-        this.type = type;
-        this.description = description;
-        this.transactionDate = transactionDate;
-        this.categoryId = category;
-    }
 }

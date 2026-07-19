@@ -7,12 +7,12 @@ import java.util.List;
 
 public class CategoryMapperResponse {
     public CategoryResponse toResponse(Category category) {
-        CategoryResponse response = new CategoryResponse();
-        response.setId(category.getId());
-        response.setName(category.getName());
-        response.setType(category.getType());
-        response.setCreatedAt(category.getCreatedAt());
-        return response;
+        return CategoryResponse.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .type(category.getType())
+                .createdAt(category.getCreatedAt())
+                .build();
     }
 
 

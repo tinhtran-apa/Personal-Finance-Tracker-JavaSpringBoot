@@ -9,19 +9,17 @@ import com.apa.finance_tracker.mappers.category.CategoryMapperUpdate;
 import com.apa.finance_tracker.repositories.CategoryRepository;
 import com.apa.finance_tracker.repositories.TransactionRepository;
 import com.apa.finance_tracker.services.CategoryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final TransactionRepository transactionRepository;
-    public CategoryServiceImpl(CategoryRepository categoryRepository,  TransactionRepository transactionRepository) {
-        this.categoryRepository = categoryRepository;
-        this.transactionRepository = transactionRepository;
-    }
 
     @Override
     public Category createCategory(Category category) {

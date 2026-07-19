@@ -5,12 +5,11 @@ import com.apa.finance_tracker.entitys.Category;
 
 public class CategoryMapperUpdate {
     public Category toEntityUpdate(CategoryUpdateRequest request) {
-        Category category = new Category();
-        category.setName(request.getName());
-        category.setType(request.getType());
-        return category;
+        return Category.builder()
+                .name(request.getName())
+                .type(request.getType())
+                .build();
     }
-
 
     public void updateEntity(Category target, Category source) {
         target.setName(source.getName());

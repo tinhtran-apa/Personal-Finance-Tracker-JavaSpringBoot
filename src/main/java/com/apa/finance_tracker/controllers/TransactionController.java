@@ -14,6 +14,7 @@ import com.apa.finance_tracker.mappers.transaction.TransactionMapperResponse;
 import com.apa.finance_tracker.mappers.transaction.TransactionMapperUpdate;
 import com.apa.finance_tracker.services.TransactionService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,12 +26,9 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/transactions")
+@RequiredArgsConstructor
 public class TransactionController {
     private final TransactionService transactionService;
-
-    public TransactionController(TransactionService transactionService) {
-        this.transactionService = transactionService;
-    }
 
     @PostMapping
     public ResponseEntity<ApiResponse<TransactionResponse>> createTransaction(@Valid @RequestBody TransactionCreateRequest request) {

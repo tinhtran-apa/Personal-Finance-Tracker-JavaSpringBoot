@@ -5,9 +5,9 @@ import com.apa.finance_tracker.entitys.Category;
 
 public class CategoryMapperCreate {
     public Category toEntityCreate(CategoryCreateRequest request) {
-        Category category = new Category();
-        category.setName(request.getName());
-        category.setType(request.getType());
-        return category;
+        return Category.builder()
+                .name(request.getName())
+                .type(request.getType())
+                .build();
     }
 }

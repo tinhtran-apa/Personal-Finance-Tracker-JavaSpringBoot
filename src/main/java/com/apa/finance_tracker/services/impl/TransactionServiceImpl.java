@@ -12,6 +12,7 @@ import com.apa.finance_tracker.repositories.TransactionRepository;
 import com.apa.finance_tracker.services.CategoryService;
 import com.apa.finance_tracker.services.TransactionService;
 import com.apa.finance_tracker.specifications.TransactionSpecification;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,14 +22,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Service
+@RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final CategoryService categoryService;
 
-    public TransactionServiceImpl(TransactionRepository transactionRepository, CategoryService categoryService) {
-        this.transactionRepository = transactionRepository;
-        this.categoryService = categoryService;
-    }
     @Override
     public Transaction createTransaction(Transaction transaction) {
         Category category = categoryService.getCategoryById(transaction.getCategory().getId());
@@ -46,7 +44,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Page<Transaction> getAllTransaction(TransactionType type, Long categoryId, LocalDate from, LocalDate to,Pageable pageable) {
-        System.out.println("type = " + type);
         Specification<Transaction> specification = TransactionSpecification.filter(type, categoryId, from, to);
         return transactionRepository.findAll(specification, pageable);
     }
@@ -55,7 +52,7 @@ public class TransactionServiceImpl implements TransactionService {
     public Transaction updateTransaction(Long transactionId, Transaction transaction) {
         Transaction existTransaction = getTransactionById(transactionId);
 
-        Category category = categoryService.getCategoryById(existTransaction.getCategory().getId());
+        Category category = categoryService.getCategoryById(transaction.getCategory().getId());
 
         if(!transaction.getType().name().equals(category.getType().name())) {
             throw new BusinessException(ErrorMessage.TRANSACTION_TYPE_MISMATCH);

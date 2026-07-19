@@ -1,23 +1,15 @@
 package com.apa.finance_tracker.dtos.responses;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ApiResponse<T> {
     private int status;
     private String message;
     private T data;
-
-    public ApiResponse() {
-    }
-
-    public ApiResponse(int status, String message, T data) {
-        this.status = status;
-        this.message = message;
-        this.data = data;
-    }
 
     public static <T> ApiResponse<T> success(String message, T data) {
         return new ApiResponse<>(200, message, data);
