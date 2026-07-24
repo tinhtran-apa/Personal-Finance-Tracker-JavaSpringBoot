@@ -27,6 +27,9 @@ public class Category {
     @Column(name="created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    private String icon;
+
     @PrePersist
     public void prePersit() {
         createdAt = LocalDateTime.now();

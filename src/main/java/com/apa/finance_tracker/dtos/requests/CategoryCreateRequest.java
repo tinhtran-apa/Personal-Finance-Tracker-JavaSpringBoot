@@ -19,4 +19,7 @@ public class CategoryCreateRequest {
 
     @NotNull(message = ValidationMessage.CATEGORY_TYPE_REQUIRED)
     private CategoryType type;
+
+    @NotNull(message = ValidationMessage.CATEGORY_ICON_REQUIRED)
+    private String icon;
 }

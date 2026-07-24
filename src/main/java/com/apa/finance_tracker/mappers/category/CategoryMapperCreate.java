@@ -8,6 +8,7 @@ public class CategoryMapperCreate {
         return Category.builder()
                 .name(request.getName())
                 .type(request.getType())
+                .icon(request.getIcon())
                 .build();
     }
 }

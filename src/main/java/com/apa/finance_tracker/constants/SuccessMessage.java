@@ -16,4 +16,7 @@ public class SuccessMessage {
     public static final String TRANSACTION_LIST_RETRIEVED = "Transaction retrieved successfully";
     public static final String TRANSACTION_SUMMARY = "Summary successfully";
 
+    public static final String AUTH_REGISTER = "User registered successfully";
+    public static final String AUTH_LOGGED_IN = "User logged in successfully";
+
 }

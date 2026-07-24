@@ -1,6 +1,7 @@
 package com.apa.finance_tracker.services.impl;
 
 import com.apa.finance_tracker.constants.ErrorMessage;
+import com.apa.finance_tracker.dtos.responses.CategorySummaryResponse;
 import com.apa.finance_tracker.dtos.responses.TransactionSummaryResponse;
 import com.apa.finance_tracker.entitys.Category;
 import com.apa.finance_tracker.entitys.Transaction;
@@ -8,6 +9,7 @@ import com.apa.finance_tracker.enums.TransactionType;
 import com.apa.finance_tracker.exceptions.resource.BusinessException;
 import com.apa.finance_tracker.exceptions.resource.ResourceNotFoundException;
 import com.apa.finance_tracker.mappers.transaction.TransactionMapperUpdate;
+import com.apa.finance_tracker.projection.CategorySummaryProjection;
 import com.apa.finance_tracker.repositories.TransactionRepository;
 import com.apa.finance_tracker.services.CategoryService;
 import com.apa.finance_tracker.services.TransactionService;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -43,8 +46,8 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Page<Transaction> getAllTransaction(TransactionType type, Long categoryId, LocalDate from, LocalDate to,Pageable pageable) {
-        Specification<Transaction> specification = TransactionSpecification.filter(type, categoryId, from, to);
+    public Page<Transaction> getAllTransaction(TransactionType type, Long categoryId, LocalDate from, LocalDate to,String keyword, String searchBy,Pageable pageable) {
+        Specification<Transaction> specification = TransactionSpecification.filter(type, categoryId, from, to, keyword, searchBy);
         return transactionRepository.findAll(specification, pageable);
     }
 
@@ -78,6 +81,13 @@ public class TransactionServiceImpl implements TransactionService {
         response.setTotalExpense(expense);
         response.setBalance(income.subtract(expense));
         return response;
+    }
+
+    @Override
+    public List<CategorySummaryProjection> getSummaryByCategory(
+            TransactionType type
+    ) {
+        return transactionRepository.getSummaryByCategory(type);
     }
 
     private Transaction getTransaction(Long transactionId) {

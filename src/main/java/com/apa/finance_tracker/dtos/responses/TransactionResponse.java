@@ -20,6 +20,7 @@ public class TransactionResponse {
     private LocalDate transactionDate;
     private Long categoryId;
     private String categoryName;
+    private String categoryIcon;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

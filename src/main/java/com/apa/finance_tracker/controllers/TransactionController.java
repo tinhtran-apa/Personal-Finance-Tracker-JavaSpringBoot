@@ -3,15 +3,13 @@ package com.apa.finance_tracker.controllers;
 import com.apa.finance_tracker.constants.SuccessMessage;
 import com.apa.finance_tracker.dtos.requests.TransactionCreateRequest;
 import com.apa.finance_tracker.dtos.requests.TransactionUpdateRequest;
-import com.apa.finance_tracker.dtos.responses.ApiResponse;
-import com.apa.finance_tracker.dtos.responses.PageResponse;
-import com.apa.finance_tracker.dtos.responses.TransactionResponse;
-import com.apa.finance_tracker.dtos.responses.TransactionSummaryResponse;
+import com.apa.finance_tracker.dtos.responses.*;
 import com.apa.finance_tracker.entitys.Transaction;
 import com.apa.finance_tracker.enums.TransactionType;
 import com.apa.finance_tracker.mappers.transaction.TransactionMapperCreate;
 import com.apa.finance_tracker.mappers.transaction.TransactionMapperResponse;
 import com.apa.finance_tracker.mappers.transaction.TransactionMapperUpdate;
+import com.apa.finance_tracker.projection.CategorySummaryProjection;
 import com.apa.finance_tracker.services.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -24,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -53,9 +52,13 @@ public class TransactionController {
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDate to,
+            @RequestParam(required = false)
+            String keyword,
+            @RequestParam(required = false)
+            String searchBy,
             Pageable pageable
     ) {
-        Page<Transaction> transaction = transactionService.getAllTransaction(type, categoryId, from, to, pageable);
+        Page<Transaction> transaction = transactionService.getAllTransaction(type, categoryId, from, to, keyword,searchBy, pageable);
         PageResponse<TransactionResponse> response = new TransactionMapperResponse().toResponsePage(transaction);
         return ResponseEntity.ok(ApiResponse.success(SuccessMessage.TRANSACTION_LIST_RETRIEVED, response));
     }
@@ -88,5 +91,18 @@ public class TransactionController {
     @Operation(summary = "Get summary of transaction")
     public ResponseEntity<ApiResponse<TransactionSummaryResponse>> getSummary() {
         return ResponseEntity.ok(ApiResponse.success(SuccessMessage.TRANSACTION_SUMMARY, transactionService.getSummary()));
+    }
+
+    @GetMapping("/summary-by-category")
+    public ResponseEntity<ApiResponse<List<CategorySummaryResponse>>> getSummaryByCategory(
+            @RequestParam(required = false) TransactionType type
+    ) {
+
+        List<CategorySummaryProjection> summaries =
+                transactionService.getSummaryByCategory(type);
+
+        List<CategorySummaryResponse> response = new TransactionMapperResponse().toCategorySummaryResponseList(summaries);
+
+        return ResponseEntity.ok(ApiResponse.success(SuccessMessage.TRANSACTION_SUMMARY, response));
     }
 }

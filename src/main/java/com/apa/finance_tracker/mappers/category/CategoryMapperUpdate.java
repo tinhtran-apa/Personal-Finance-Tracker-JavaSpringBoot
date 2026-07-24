@@ -8,11 +8,13 @@ public class CategoryMapperUpdate {
         return Category.builder()
                 .name(request.getName())
                 .type(request.getType())
+                .icon(request.getIcon())
                 .build();
     }
 
     public void updateEntity(Category target, Category source) {
         target.setName(source.getName());
         target.setType(source.getType());
+        target.setIcon(source.getIcon());
     }
 }

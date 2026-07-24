@@ -11,6 +11,7 @@ public class CategoryMapperResponse {
                 .id(category.getId())
                 .name(category.getName())
                 .type(category.getType())
+                .icon(category.getIcon())
                 .createdAt(category.getCreatedAt())
                 .build();
     }
