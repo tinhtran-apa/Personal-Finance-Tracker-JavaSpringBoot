@@ -1,8 +1,6 @@
 package com.apa.finance_tracker.services.impl;
 
 import com.apa.finance_tracker.constants.ErrorMessage;
-import com.apa.finance_tracker.dtos.responses.CategorySummaryResponse;
-import com.apa.finance_tracker.dtos.responses.TransactionSummaryResponse;
 import com.apa.finance_tracker.entitys.Category;
 import com.apa.finance_tracker.entitys.Transaction;
 import com.apa.finance_tracker.enums.TransactionType;
@@ -20,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -73,17 +70,6 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionSummaryResponse getSummary() {
-        BigDecimal income = transactionRepository.getTotalAmountByType(TransactionType.INCOME);
-        BigDecimal expense = transactionRepository.getTotalAmountByType(TransactionType.EXPENSE);
-        TransactionSummaryResponse response = new TransactionSummaryResponse();
-        response.setTotalIncome(income);
-        response.setTotalExpense(expense);
-        response.setBalance(income.subtract(expense));
-        return response;
-    }
-
-    @Override
     public List<CategorySummaryProjection> getSummaryByCategory(
             TransactionType type
     ) {
@@ -93,4 +79,6 @@ public class TransactionServiceImpl implements TransactionService {
     private Transaction getTransaction(Long transactionId) {
         return transactionRepository.findById(transactionId).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.TRANSACTION_NOT_FOUND));
     }
+
+
 }

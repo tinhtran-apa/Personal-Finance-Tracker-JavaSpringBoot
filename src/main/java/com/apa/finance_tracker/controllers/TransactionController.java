@@ -10,6 +10,7 @@ import com.apa.finance_tracker.mappers.transaction.TransactionMapperCreate;
 import com.apa.finance_tracker.mappers.transaction.TransactionMapperResponse;
 import com.apa.finance_tracker.mappers.transaction.TransactionMapperUpdate;
 import com.apa.finance_tracker.projection.CategorySummaryProjection;
+import com.apa.finance_tracker.projection.TransactionSummaryProjection;
 import com.apa.finance_tracker.services.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -86,13 +87,7 @@ public class TransactionController {
         transactionService.deleteTransaction(transactionId);
         return ResponseEntity.ok(ApiResponse.success(SuccessMessage.TRANSACTION_DELETED));
     }
-
-    @GetMapping("/summary")
-    @Operation(summary = "Get summary of transaction")
-    public ResponseEntity<ApiResponse<TransactionSummaryResponse>> getSummary() {
-        return ResponseEntity.ok(ApiResponse.success(SuccessMessage.TRANSACTION_SUMMARY, transactionService.getSummary()));
-    }
-
+    
     @GetMapping("/summary-by-category")
     public ResponseEntity<ApiResponse<List<CategorySummaryResponse>>> getSummaryByCategory(
             @RequestParam(required = false) TransactionType type
@@ -105,4 +100,5 @@ public class TransactionController {
 
         return ResponseEntity.ok(ApiResponse.success(SuccessMessage.TRANSACTION_SUMMARY, response));
     }
+
 }

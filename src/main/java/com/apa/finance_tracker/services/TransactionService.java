@@ -1,7 +1,5 @@
 package com.apa.finance_tracker.services;
 
-import com.apa.finance_tracker.dtos.responses.CategorySummaryResponse;
-import com.apa.finance_tracker.dtos.responses.TransactionSummaryResponse;
 import com.apa.finance_tracker.entitys.Transaction;
 import com.apa.finance_tracker.enums.TransactionType;
 import com.apa.finance_tracker.projection.CategorySummaryProjection;
@@ -21,11 +19,13 @@ public interface TransactionService {
 
     Transaction updateTransaction(Long transactionId, Transaction transaction);
 
-    TransactionSummaryResponse getSummary();
-
     void deleteTransaction(Long transactionId);
 
     List<CategorySummaryProjection> getSummaryByCategory(
             TransactionType type
     );
+
+
+
+
 }

@@ -3,6 +3,8 @@ package com.apa.finance_tracker.repositories;
 import com.apa.finance_tracker.entitys.Transaction;
 import com.apa.finance_tracker.enums.TransactionType;
 import com.apa.finance_tracker.projection.CategorySummaryProjection;
+import com.apa.finance_tracker.projection.DashboardSummaryProjection;
+import com.apa.finance_tracker.projection.TransactionSummaryProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -29,4 +31,25 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
     ORDER BY c.name
 """)
     List<CategorySummaryProjection> getSummaryByCategory(TransactionType type);
+
+    @Query("""
+        SELECT
+            EXTRACT(MONTH FROM t.transactionDate) AS month,
+            t.type AS type,
+            SUM(t.amount) AS total
+        FROM Transaction t
+        WHERE EXTRACT(YEAR FROM t.transactionDate) = :year
+        GROUP BY EXTRACT(MONTH FROM t.transactionDate), t.type
+        ORDER BY EXTRACT(MONTH FROM t.transactionDate), t.type
+        """)
+    List<TransactionSummaryProjection> getSummaryByType(Integer year);
+
+    @Query("""
+    SELECT
+        COUNT(DISTINCT t.category.id) AS categoryCount,
+        COUNT(t.id) AS transactionCount
+    FROM Transaction t
+    WHERE EXTRACT(YEAR FROM t.transactionDate) = :year
+    """)
+    DashboardSummaryProjection getDashboardSummary(Integer year);
 }
