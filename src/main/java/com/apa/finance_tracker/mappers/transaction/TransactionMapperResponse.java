@@ -54,6 +54,7 @@ public class TransactionMapperResponse {
                 .categoryId(projection.getCategoryId())
                 .categoryName(projection.getCategoryName())
                 .total(projection.getTotal())
+                .transactionCount(projection.getTransactionCount())
                 .build();
     }
 

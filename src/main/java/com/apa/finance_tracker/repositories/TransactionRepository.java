@@ -23,7 +23,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
     SELECT
         c.id AS categoryId,
         c.name AS categoryName,
-        COALESCE(SUM(t.amount), 0) AS total
+        COALESCE(SUM(t.amount), 0) AS total,
+        COUNT(t.id) AS transactionCount
     FROM Transaction t
     JOIN t.category c
     WHERE (:type IS NULL OR t.type = :type)

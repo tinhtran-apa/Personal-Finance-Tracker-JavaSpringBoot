@@ -17,4 +17,6 @@ public class CategorySummaryResponse {
 
     private BigDecimal total;
 
+    private Long transactionCount;
+
 }

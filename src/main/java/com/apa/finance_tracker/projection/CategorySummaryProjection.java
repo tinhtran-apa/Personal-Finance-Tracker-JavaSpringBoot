@@ -9,4 +9,6 @@ public interface CategorySummaryProjection {
     String getCategoryName();
 
     BigDecimal getTotal();
+
+    Long getTransactionCount();
 }
