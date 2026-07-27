@@ -3,9 +3,6 @@ package com.apa.finance_tracker.entitys;
 import com.apa.finance_tracker.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.*;
-
-import javax.management.relation.Role;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
