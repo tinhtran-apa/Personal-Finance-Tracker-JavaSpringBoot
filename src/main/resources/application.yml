@@ -13,8 +13,10 @@ spring:
     show-sql: true
 
   jwt:
-    secret-key: ${JWT_SECRET_KEY}
-    expiration: ${JWT_EXPIRATION}
+    access-secret: ${JWT_ACCESS_SECRET}
+    access-expiration: ${JWT_ACCESS_EXPIRATION}
+    refresh-secret: ${JWT_REFRESH_SECRET}
+    refresh-expiration: ${JWT_REFRESH_SECRET}
 
   fe:
-    url:${FE_URL}
+    url: ${FE_URL}
