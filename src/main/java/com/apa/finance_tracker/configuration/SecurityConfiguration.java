@@ -27,6 +27,7 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
     private final UserDetailServiceCustomizer userDetailsServiceCustomizer;
+    private final JwtDecoderConfiguration jwtDecoderConfiguration;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -36,15 +37,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/auth/*").permitAll()
                         .anyRequest().authenticated()
                 )
-                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
+                .oauth2ResourceServer((oauth2) -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoderConfiguration)));
         return http.build();
-    }
-
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        String key = "123456";
-        SecretKey secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HS256");
-        return NimbusJwtDecoder.withSecretKey(secretKey).macAlgorithm(MacAlgorithm.HS256).build();
     }
 
     @Bean

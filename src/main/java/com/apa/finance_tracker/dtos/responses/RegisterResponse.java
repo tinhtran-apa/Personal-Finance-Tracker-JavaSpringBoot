@@ -3,7 +3,6 @@ package com.apa.finance_tracker.dtos.responses;
 import com.apa.finance_tracker.enums.RoleType;
 import lombok.*;
 
-import javax.management.relation.Role;
 import java.time.LocalDateTime;
 
 @Getter
@@ -11,7 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserResponse {
+public class RegisterResponse {
     private Long id;
     private String fullName;
     private String email;
