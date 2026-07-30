@@ -85,10 +85,6 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public boolean verifyRefreshToken(String token) throws ParseException, JOSEException {
         SignedJWT signedJWT = SignedJWT.parse(token);
-        Date expiration = signedJWT.getJWTClaimsSet().getExpirationTime();
-        if (expiration.before(new Date())) {
-            return false;
-        }
         return signedJWT.verify(new MACVerifier(refreshSecretKey));
     }
 }

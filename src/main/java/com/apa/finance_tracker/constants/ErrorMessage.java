@@ -11,10 +11,15 @@ public class ErrorMessage {
     public static final String TRANSACTION_NOT_FOUND = "Transaction not found";
     public static final String TRANSACTION_TYPE_MISMATCH = "Transaction type must match category type";
 
-    public static final String USER_ALREADY_EXISTS = "User already exists";
-    public static final String USER_NOT_FOUND = "User not found";
+    public static final String USER_ALREADY_EXISTS = "User already exists.";
+    public static final String USER_NOT_FOUND = "User not found.";
+    public static final String USER_NOT_LOGIN = "User not logged in.";
 
     public static final String TOKEN_INVALID = "Invalid token.";
+    public static final String REFRESH_TOKEN_MISSING= "Refresh token is missing.";
+    public static final String REFRESH_TOKEN_INVALID = "Invalid refresh token.";
+    public static final String REFRESH_TOKEN_REVOKED = "Refresh token has been revoked.";
+    public static final String REFRESH_TOKEN_EXPIRED = "Refresh token is expired.";
 
     public static final String INTERNAL_SERVER_ERROR = "Internal server error";
 
