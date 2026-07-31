@@ -14,6 +14,7 @@ public class ErrorMessage {
     public static final String USER_ALREADY_EXISTS = "User already exists.";
     public static final String USER_NOT_FOUND = "User not found.";
     public static final String USER_NOT_LOGIN = "User not logged in.";
+    public static final String USER_UNAUTHORIZED = "Email or password is incorrect.";
 
     public static final String TOKEN_INVALID = "Invalid token.";
     public static final String REFRESH_TOKEN_MISSING= "Refresh token is missing.";

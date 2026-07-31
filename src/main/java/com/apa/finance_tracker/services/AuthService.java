@@ -12,5 +12,6 @@ public interface AuthService {
     User registerUser(User user);
     Token loginUser(User user);
     Token refreshToken (String refreshToken)  throws ParseException, JOSEException;
-    User getMe ();
+    User getCurrentUser ();
+    void logOut (String refreshToken);
 }

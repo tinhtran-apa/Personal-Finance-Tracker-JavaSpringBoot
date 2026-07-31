@@ -1,7 +1,9 @@
 package com.apa.finance_tracker.services.impl;
 
 import com.apa.finance_tracker.dtos.responses.DashboardResponse;
+import com.apa.finance_tracker.entitys.User;
 import com.apa.finance_tracker.enums.TransactionType;
+import com.apa.finance_tracker.helpers.SecurityHelper;
 import com.apa.finance_tracker.projection.DashboardSummaryProjection;
 import com.apa.finance_tracker.projection.TransactionSummaryProjection;
 import com.apa.finance_tracker.repositories.TransactionRepository;
@@ -17,15 +19,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DashboardServiceImpl implements DashboardService {
     private final TransactionRepository transactionRepository;
+    private final SecurityHelper securityHelper;
 
     @Override
     public DashboardResponse getDashboard(Integer year) {
-
+        User currentUser = securityHelper.getCurrentUser();
         List<TransactionSummaryProjection> monthlySummary =
-                transactionRepository.getSummaryByType(year);
+                transactionRepository.getSummaryByType(currentUser.getId(), year);
 
         DashboardSummaryProjection dashboardSummary =
-                transactionRepository.getDashboardSummary(year);
+                transactionRepository.getDashboardSummary(currentUser.getId(), year);
 
         BigDecimal totalIncome = BigDecimal.ZERO;
         BigDecimal totalExpense = BigDecimal.ZERO;

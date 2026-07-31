@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.time.Duration;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -52,7 +51,7 @@ public class AuthController {
         ResponseCookie cookie = ResponseCookie.from("refreshToken", token.getRefreshToken())
                 .httpOnly(true)
                 .secure(false)
-                .path("/")
+                .path("/api/auth")
                 .sameSite("strict")
                 .maxAge(Duration.ofDays(7))
                 .build();
@@ -64,16 +63,16 @@ public class AuthController {
 
     @PostMapping("/refresh")
     @Operation(summary = "Refresh new access token")
-    public ResponseEntity<ApiResponse<RefreshTokenResponse>> refreshToken(@CookieValue(name="refreshToken") String refreshToken, HttpServletResponse cookieResponse) throws ParseException, JOSEException {
+    public ResponseEntity<ApiResponse<RefreshTokenResponse>> refreshToken(@CookieValue(name = "refreshToken") String refreshToken, HttpServletResponse cookieResponse) throws ParseException, JOSEException {
         try {
             Token token = authService.refreshToken(refreshToken);
             RefreshTokenResponse response = new AuthMapperResponse().toRefreshTokenResponse(token);
             return ResponseEntity.ok(ApiResponse.success(SuccessMessage.AUTH_REFRESH_TOKEN, response));
         } catch (BusinessException e) {
-            if(e.getMessage().equals(ErrorMessage.REFRESH_TOKEN_INVALID) || e.getMessage().equals(ErrorMessage.REFRESH_TOKEN_EXPIRED)) {
+            if (e.getMessage().equals(ErrorMessage.REFRESH_TOKEN_INVALID) || e.getMessage().equals(ErrorMessage.REFRESH_TOKEN_EXPIRED)) {
                 Cookie cookie = new Cookie("refreshToken", "");
                 cookie.setHttpOnly(true);
-                cookie.setPath("/");
+                cookie.setPath("/api/auth");
                 cookie.setMaxAge(0);
                 cookieResponse.addCookie(cookie);
             }
@@ -81,13 +80,24 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/me")
-    @Operation(summary = "Get user info")
-    public ResponseEntity<ApiResponse<UserResponse>> getMe() {
-        User user = authService.getMe();
-        UserResponse response = new AuthMapperResponse().toUserResponse(user);
-        return ResponseEntity.ok(ApiResponse.success(SuccessMessage.USER_RETRIEVED, response));
+    @PostMapping("/logout")
+    @Operation(summary = "Log out user")
+    public ResponseEntity<ApiResponse<Void>> logoutUser(@CookieValue(name = "refreshToken") String refreshToken, HttpServletResponse cookieResponse) {
+        authService.logOut(refreshToken);
+        Cookie cookie = new Cookie("refreshToken", "");
+        cookie.setHttpOnly(true);
+        cookie.setPath("/api/auth");
+        cookie.setMaxAge(0);
+        cookieResponse.addCookie(cookie);
+        return ResponseEntity.ok(ApiResponse.success(SuccessMessage.AUTH_LOGGED_OUT));
     }
 
 
+    @GetMapping("/current-user")
+    @Operation(summary = "Get user info")
+    public ResponseEntity<ApiResponse<UserResponse>> getCurrentUser() {
+        User user = authService.getCurrentUser();
+        UserResponse response = new AuthMapperResponse().toUserResponse(user);
+        return ResponseEntity.ok(ApiResponse.success(SuccessMessage.USER_RETRIEVED, response));
+    }
 }

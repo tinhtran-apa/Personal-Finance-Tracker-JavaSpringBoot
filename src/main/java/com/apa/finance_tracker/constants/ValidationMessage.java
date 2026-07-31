@@ -18,6 +18,7 @@ public class ValidationMessage {
     public static final String USER_EMAIL_INVALID = "Email is invalid";
     public static final String USER_PASSWORD_REQUIRED = "Password is required";
     public static final String USER_PASSWORD_SIZE = "Password must be at least 8 characters";
+    public static final String USER_REQUIRED = "User is required.";
 
     public static final String INVALID_ENUM_VALUE = "Invalid enum value";
 }

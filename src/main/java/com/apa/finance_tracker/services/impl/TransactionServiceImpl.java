@@ -6,6 +6,7 @@ import com.apa.finance_tracker.entitys.Transaction;
 import com.apa.finance_tracker.enums.TransactionType;
 import com.apa.finance_tracker.exceptions.resource.BusinessException;
 import com.apa.finance_tracker.exceptions.resource.ResourceNotFoundException;
+import com.apa.finance_tracker.helpers.SecurityHelper;
 import com.apa.finance_tracker.mappers.transaction.TransactionMapperUpdate;
 import com.apa.finance_tracker.projection.CategorySummaryProjection;
 import com.apa.finance_tracker.repositories.TransactionRepository;
@@ -26,6 +27,7 @@ import java.util.List;
 public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final CategoryService categoryService;
+    private final SecurityHelper securityHelper;
 
     @Override
     public Transaction createTransaction(Transaction transaction) {
@@ -34,17 +36,19 @@ public class TransactionServiceImpl implements TransactionService {
             throw new BusinessException(ErrorMessage.TRANSACTION_TYPE_MISMATCH);
         }
         transaction.setCategory(category);
+        transaction.setUser(securityHelper.getCurrentUser());
         return transactionRepository.save(transaction);
     }
 
     @Override
     public Transaction getTransactionById(Long transactionId) {
-        return getTransaction(transactionId);
+        return getTransaction(transactionId, securityHelper.getCurrentUser().getId());
     }
 
     @Override
     public Page<Transaction> getAllTransaction(TransactionType type, Long categoryId, LocalDate from, LocalDate to,String keyword, String searchBy,Pageable pageable) {
-        Specification<Transaction> specification = TransactionSpecification.filter(type, categoryId, from, to, keyword, searchBy);
+        Long userId = securityHelper.getCurrentUser().getId();
+        Specification<Transaction> specification = TransactionSpecification.filter(userId, type, categoryId, from, to, keyword, searchBy);
         return transactionRepository.findAll(specification, pageable);
     }
 
@@ -65,20 +69,21 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public void deleteTransaction(Long transactionId) {
-        getTransaction(transactionId);
-        transactionRepository.deleteById(transactionId);
+        Transaction transaction = getTransaction(transactionId, securityHelper.getCurrentUser().getId());
+        transactionRepository.delete(transaction);
     }
 
     @Override
     public List<CategorySummaryProjection> getSummaryByCategory(
             TransactionType type
     ) {
-        return transactionRepository.getSummaryByCategory(type);
+        return transactionRepository.getSummaryByCategory(
+                securityHelper.getCurrentUser().getId(),
+                type
+        );
     }
 
-    private Transaction getTransaction(Long transactionId) {
-        return transactionRepository.findById(transactionId).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.TRANSACTION_NOT_FOUND));
+    private Transaction getTransaction(Long transactionId, Long userId) {
+        return transactionRepository.findByIdAndUserId(transactionId, userId).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.TRANSACTION_NOT_FOUND));
     }
-
-
 }

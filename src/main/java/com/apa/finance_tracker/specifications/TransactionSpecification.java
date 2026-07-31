@@ -15,6 +15,7 @@ import jakarta.persistence.criteria.Predicate;
 
 public class TransactionSpecification {
     public static Specification<Transaction> filter(
+            Long userId,
             TransactionType type,
             Long categoryId,
             LocalDate from,
@@ -25,6 +26,9 @@ public class TransactionSpecification {
         return (root, query, cb) -> {
 
             List<Predicate> predicates = new ArrayList<>();
+            predicates.add(
+                    cb.equal(root.get("user").get("id"), userId)
+            );
 
             if (type != null) {
                 predicates.add(cb.equal(root.get("type"), type));

@@ -2,9 +2,11 @@ package com.apa.finance_tracker.services.impl;
 
 import com.apa.finance_tracker.constants.ErrorMessage;
 import com.apa.finance_tracker.entitys.Category;
+import com.apa.finance_tracker.entitys.User;
 import com.apa.finance_tracker.exceptions.resource.BusinessException;
 import com.apa.finance_tracker.exceptions.resource.DuplicateResourceException;
 import com.apa.finance_tracker.exceptions.resource.ResourceNotFoundException;
+import com.apa.finance_tracker.helpers.SecurityHelper;
 import com.apa.finance_tracker.mappers.category.CategoryMapperUpdate;
 import com.apa.finance_tracker.repositories.CategoryRepository;
 import com.apa.finance_tracker.repositories.TransactionRepository;
@@ -20,10 +22,13 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final TransactionRepository transactionRepository;
+    private final SecurityHelper securityHelper;
 
     @Override
     public Category createCategory(Category category) {
-        if(categoryRepository.existsByName(category.getName())){
+        User currentUser = securityHelper.getCurrentUser();
+        category.setUser(currentUser);
+        if(categoryRepository.existsByNameAndUserId(category.getName(),currentUser.getId() )){
             throw new DuplicateResourceException(ErrorMessage.CATEGORY_ALREADY_EXISTS);
         }
         return categoryRepository.save(category);
@@ -31,17 +36,18 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getCategoryById(Long categoryId) {
-        return getCategory(categoryId);
+        return getCategory(categoryId, securityHelper.getCurrentUser().getId());
     }
 
     @Override
     public List<Category> getAllCategory() {
-        return categoryRepository.findAll();
+        return categoryRepository.findAllByUserId(securityHelper.getCurrentUser().getId());
     }
 
     @Override
     public Category updateCategory(Long categoryId, Category category) {
-        Category existCategory = getCategory(categoryId);
+        User currentUser = securityHelper.getCurrentUser();
+        Category existCategory = getCategory(categoryId, currentUser.getId());
         if (existCategory.getType() != category.getType()
                 && transactionRepository.existsByCategoryId(categoryId)) {
 
@@ -49,7 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
                     ErrorMessage.CATEGORY_HAS_TRANSACTIONS
             );
         }
-        if (categoryRepository.existsByNameAndIdNot(category.getName(), categoryId)) {
+        if (categoryRepository.existsByNameAndUserIdAndIdNot(category.getName(),currentUser.getId() ,categoryId)) {
             throw new DuplicateResourceException(ErrorMessage.CATEGORY_ALREADY_EXISTS);
         }
         new CategoryMapperUpdate().updateEntity(existCategory, category);
@@ -58,14 +64,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(Long categoryId) {
-        getCategory(categoryId);
+        Category category = getCategory(categoryId, securityHelper.getCurrentUser().getId());
         if(transactionRepository.existsByCategoryId(categoryId)) {
             throw new BusinessException(ErrorMessage.CATEGORY_HAS_TRANSACTIONS);
         }
-        categoryRepository.deleteById(categoryId);
+        categoryRepository.delete(category);
     }
 
-    private Category getCategory(Long categoryId) {
-        return categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
+    private Category getCategory(Long categoryId, Long userId) {
+        return categoryRepository.findByIdAndUserId(categoryId, userId).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
     }
 }

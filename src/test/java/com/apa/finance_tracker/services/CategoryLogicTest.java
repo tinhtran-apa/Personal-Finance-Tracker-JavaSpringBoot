@@ -40,7 +40,7 @@ class CategoryLogicTest {
         Category category = new Category();
         category.setName("Food");
         category.setType(CategoryType.EXPENSE);
-        given(categoryRepository.existsByName("Food")).willReturn(false);
+        given(categoryRepository.existsByNameAndUserId("Food", 1L)).willReturn(false);
         given(categoryRepository.save(any(Category.class))).willAnswer(invocation -> invocation.getArgument(0));
 
         Category result = categoryService.createCategory(category);
@@ -55,7 +55,7 @@ class CategoryLogicTest {
     void givenDuplicateCategoryName_whenCreateCategory_thenThrowDuplicateResourceException() {
         Category category = new Category();
         category.setName("Food");
-        given(categoryRepository.existsByName("Food")).willReturn(true);
+        given(categoryRepository.existsByNameAndUserId("Food", 1L)).willReturn(true);
 
         assertThatThrownBy(() -> categoryService.createCategory(category)).isInstanceOf(DuplicateResourceException.class);
         then(categoryRepository).should(never()).save(any());
@@ -91,7 +91,7 @@ class CategoryLogicTest {
         newCategory.setName("Meal");
         newCategory.setType(CategoryType.EXPENSE);
         given(categoryRepository.findById(1L)).willReturn(Optional.of(oldCategory));
-        given(categoryRepository.existsByNameAndIdNot("Meal", 1L)).willReturn(false);
+        given(categoryRepository.existsByNameAndUserIdAndIdNot("Meal", 1L, 2L)).willReturn(false);
         given(categoryRepository.save(any(Category.class))).willAnswer(invocation -> invocation.getArgument(0));
 
         Category result = categoryService.updateCategory(1L, newCategory);
@@ -108,7 +108,7 @@ class CategoryLogicTest {
         Category newCategory = new Category();
         newCategory.setName("Meal");
         given(categoryRepository.findById(1L)).willReturn(Optional.of(oldCategory));
-        given(categoryRepository.existsByNameAndIdNot("Meal", 1L)).willReturn(true);
+        given(categoryRepository.existsByNameAndUserIdAndIdNot("Meal", 1L, 2L)).willReturn(true);
 
         assertThatThrownBy(() -> categoryService.updateCategory(1L, newCategory)).isInstanceOf(DuplicateResourceException.class);
     }

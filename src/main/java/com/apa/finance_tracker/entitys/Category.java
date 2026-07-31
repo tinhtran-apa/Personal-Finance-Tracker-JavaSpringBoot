@@ -17,7 +17,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true,length = 100)
+    @Column(nullable = false,length = 100)
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -29,6 +29,10 @@ public class Category {
 
     @Column(nullable = false)
     private String icon;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn (name = "user_id", nullable = false)
+    private User user;
 
     @PrePersist
     public void prePersit() {

@@ -18,6 +18,7 @@ public class SuccessMessage {
 
     public static final String AUTH_REGISTER = "User registered successfully.";
     public static final String AUTH_LOGGED_IN = "User logged in successfully.";
+    public static final String AUTH_LOGGED_OUT = "User logged out successfully.";
     public static final String AUTH_REFRESH_TOKEN = "Refresh token successfully.";
 
     public static final String USER_RETRIEVED = "User retrieved successfully.";

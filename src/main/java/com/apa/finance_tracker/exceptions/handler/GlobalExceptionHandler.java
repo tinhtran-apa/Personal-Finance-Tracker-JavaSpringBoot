@@ -7,6 +7,7 @@ import com.apa.finance_tracker.constants.ErrorCode;
 import com.apa.finance_tracker.exceptions.resource.BusinessException;
 import com.apa.finance_tracker.exceptions.resource.DuplicateResourceException;
 import com.apa.finance_tracker.exceptions.resource.ResourceNotFoundException;
+import com.apa.finance_tracker.exceptions.resource.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -80,6 +81,17 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 ErrorCode.BUSINESS_ERROR,
+                ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleUnanthorizedException(UnauthorizedException ex) {
+        ErrorResponse error = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                ErrorCode.INVALID_CREDENTIALS,
                 ex.getMessage()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
